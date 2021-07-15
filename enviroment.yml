@@ -1,0 +1,10 @@
+channels:
+ - conda-forge
+ - bioconda
+ - r
+ - default
+dependencies:
+ - python=3.7.2
+ - ANGSD=0.933
+ - r-ggplot2=3.1.1
+ - r-ggrepel=0.6.5
