@@ -27,13 +27,13 @@ Nextflow pipeline that calculates genotype likelihoods in angsd from a list of b
     
 2) chrosome reference file exampel:
   
-  chr1<br> 
-  chr2<br> 
-  chr3<br> 
-  chr4<br> 
-  chr5<br> 
+   chr1<br> 
+   chr2<br> 
+   chr3<br> 
+   chr4<br> 
+   chr5<br> 
  
- **Subset of scaffolds present in your bamfiles** 
+   **Subset of scaffolds present in your bamfiles** 
  
  
  ##HPC enviroment
