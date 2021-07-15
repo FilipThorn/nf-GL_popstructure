@@ -17,10 +17,10 @@ Nextflow pipeline that calculates genotype likelihoods in angsd from a list of b
 
 1)  bam file list example: 
     
-    /results/IndvXXXX/IndvXXXX_sorted.bam<br> 
-    /results/IndvXXXX/IndvXXXX_sorted.bam<br> 
-    /results/IndvXXXXIndvXXXX_sorted.bam<br> 
-    /results/IndvXXXX/IndvXXXX_sorted.bam<br> 
+    /Absolute/PATH/IndvXXXX/IndvXXXX_sorted.bam<br> 
+    /Absolute/PATH/IndvXXXX/IndvXXXX_sorted.bam<br> 
+    /Absolute/PATH/IndvXXXXIndvXXXX_sorted.bam<br> 
+    /Absolute/PATH/IndvXXXX/IndvXXXX_sorted.bam<br> 
 
     **Lables in plots are depend on the subdirectory name**
     
