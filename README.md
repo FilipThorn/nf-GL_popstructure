@@ -37,6 +37,6 @@ Nextflow pipeline that calculates genotype likelihoods in angsd from a list of b
  
  
  ##HPC enviroment
- Use of a HPC is recomended. create a nextflow config profile that matches your cluster set-up ( [`profile`]( https://www.nextflow.io/docs/latest/config.html#config-profiles)
+ Use of a HPC is recomended. create a nextflow config profile that matches your cluster set-up [`profile`]( https://www.nextflow.io/docs/latest/config.html#config-profiles)
  
   
