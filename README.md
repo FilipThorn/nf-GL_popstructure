@@ -44,6 +44,6 @@ Nextflow pipeline that calculates genotype likelihoods in angsd from a list of b
  
  
 ##Output examples 
-[Alt text](/example_plots/AsteAmay_NGSadmix_k2.png?raw=true)
+![Alt text](/example_plots/AsteAmay_NGSadmix_k2.png?raw=true)
 
   
