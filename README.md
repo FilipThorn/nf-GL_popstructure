@@ -22,7 +22,10 @@ Nextflow pipeline that calculates genotype likelihoods in angsd from a list of b
     /results/IndvXXXXIndvXXXX_sorted.bam<br> 
     /results/IndvXXXX/IndvXXXX_sorted.bam<br> 
 
-    **Lables in plots are depend on the subdirectory of where a bam file is stored being called the sample id**
+    **Lables in plots are depend on the subdirectory name**
+    
+    /results/**Indv0001**/Indv0001_sorted.bam<br> 
+    
     if you have a different file structure you can run the pipeline with the flag **--skip_plots true** and create your plots on your own
     
 2) chrosome reference file exampel:
