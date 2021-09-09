@@ -121,7 +121,7 @@ process PCAngsd {
 
   script:
   """
-  ${params.PCAngsd} -beagle $GL -o ${subset} -threads ${task.cpus}
+  python ${params.PCAngsd} -beagle $GL -o ${subset} -threads ${task.cpus}
   """
 }
 
