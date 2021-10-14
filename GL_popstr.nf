@@ -160,7 +160,7 @@ if (!params.skip_plots){
         pop[i,]<-name
     } 
 
-    colpanel <- c("antiquewhite3", "azure3", "cadetblue", "chartreuse3", "cornflowerblue", "darkgoldenrod3", "darkolivegreen3", "darkorchid3", "deeppink1", "deepskyeblue3")
+    colpanel <- c("antiquewhite3", "azure3", "cadetblue", "chartreuse3", "cornflowerblue", "darkgoldenrod3", "darkolivegreen3", "darkorchid3", "deeppink1", "deepskyblue3")
 
     admix <- t(as.matrix(read.table("${subset}_k${anc}.qopt")))
     K <- nrow(admix)
