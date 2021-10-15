@@ -127,7 +127,7 @@ process PCAngsd {
 
 if (!params.skip_plots){
   
-    admixture_ch.combine( bams_list2_ch, by: 0 )
+    admixture_ch.join( bams_list2_ch, by: 0 )
     .set { admix_comb }
 
     process NGSadmix_plot {
