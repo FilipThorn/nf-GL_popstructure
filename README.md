@@ -1,5 +1,7 @@
+#V2.0 update to include psuedo linkage pruning and speed optimisation update
+
 # nf-GL_popstructure
-Nextflow pipeline that calculates genotype likelihoods in angsd from a list of bamfiles and plots admixture through NGSadmix and PCAs through PCAngsd.
+Nextflow pipeline that calculates genotype likelihoods in angsd from a list of bamfiles and admixture through NGSadmix and PCAs through PCAngsd.
 
 ## Quick start
 1) Install [`nextflow`](https://www.nextflow.io/) (version >= 19.04)
@@ -15,20 +17,27 @@ Nextflow pipeline that calculates genotype likelihoods in angsd from a list of b
    ```
 ## Input files
 
-1)  bam file list example: 
+1)  sample.tsv example:
+
+    name    subset  ancestral
+    SUBSET1     /Absolute/PATH/SUBSET1/bam.list   n<br>
+    SUBSET2    /Absolute/PATH/SUBSET2/bam.list  n<br>
+    
+    
+**name = subsets name**
+**subset = subsets bamlist location**
+**ancestral = clustering to fit. n +1 -1 will be calculated**
+    
+
+2)  bam.list example: 
     
     /Absolute/PATH/IndvXXXX/IndvXXXX_sorted.bam<br> 
     /Absolute/PATH/IndvXXXX/IndvXXXX_sorted.bam<br> 
     /Absolute/PATH/IndvXXXXIndvXXXX_sorted.bam<br> 
     /Absolute/PATH/IndvXXXX/IndvXXXX_sorted.bam<br> 
-
-    **Lables in plots are depend on the subdirectory name**
     
-    /results/**Indv0001**/Indv0001_sorted.bam<br> 
     
-    if you have a different file structure you can run the pipeline with the flag **--skip_plots true** and create your plots on your own
-    
-2) chrosome reference file exampel:
+3) chrosome reference file exampel:
   
    chr1<br> 
    chr2<br> 
