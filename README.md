@@ -24,9 +24,9 @@ Nextflow pipeline that calculates genotype likelihoods in angsd from a list of b
     SUBSET2    /Absolute/PATH/SUBSET2/bam.list  n<br>
     
     
-**name = subsets name**
-**subset = subsets bamlist location**
-**ancestral = clustering to fit. n +1 -1 will be calculated**
+***name = subsets name***<br>
+***subset = subsets bamlist location***<br>
+***ancestral = clustering to fit. n +1 -1 will be calculated***<br>
     
 
 2)  bam.list example: 
