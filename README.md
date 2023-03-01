@@ -1,5 +1,5 @@
 # nf-GL_popstructure
-Nextflow pipeline that calculates genotype likelihoods in angsd from a list of bamfiles and plots admixture trhough NGSadmix and PCAs through PCAngsd.
+Nextflow pipeline that calculates genotype likelihoods in angsd from a list of bamfiles and plots admixture through NGSadmix and PCAs through PCAngsd.
 
 ## Quick start
 1) Install [`nextflow`](https://www.nextflow.io/) (version >= 19.04)
