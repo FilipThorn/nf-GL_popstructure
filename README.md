@@ -19,7 +19,7 @@ Nextflow pipeline that calculates genotype likelihoods in angsd from a list of b
 
 1)  sample.tsv example:
 
-    name    subset  ancestral
+    name    subset  ancestral n<br>
     SUBSET1     /Absolute/PATH/SUBSET1/bam.list   n<br>
     SUBSET2    /Absolute/PATH/SUBSET2/bam.list  n<br>
     
