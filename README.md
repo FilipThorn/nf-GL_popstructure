@@ -13,7 +13,7 @@ Nextflow pipeline that calculates genotype likelihoods in angsd from a list of b
 4) Download and install [`PCAngsd`](https://github.com/Rosemeis/pcangsd)
 5) Run nextflowpipeline:
    ```bash
-   nextflow run main.nf --bams /PATH/TO/BAMFILELIST/'*.list' --outdir /PATH/TO/RESULTS/ --chr_ref /PATH/TO/CHRSOMELIST
+   nextflow run main.nf --bamlist_tsv /PATH/TO/BAMFILELISTTSV/'*.tsv' --outdir /PATH/TO/RESULTS/ --chr_ref /PATH/TO/CHRSOMELIST
    ```
 ## Input files
 
