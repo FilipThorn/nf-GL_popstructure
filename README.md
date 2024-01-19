@@ -13,7 +13,7 @@ Nextflow pipeline that calculates genotype likelihoods in angsd from a list of b
 4) Download and install [`PCAngsd`](https://github.com/Rosemeis/pcangsd)
 5) Run nextflowpipeline:
    ```bash
-   nextflow run GL_popstr.nf --bams /PATH/TO/BAMFILELIST/'*.list' --outdir /PATH/TO/RESULTS/ --chr_ref /PATH/TO/CHRSOMELIST
+   nextflow run main.nf --bams /PATH/TO/BAMFILELIST/'*.list' --outdir /PATH/TO/RESULTS/ --chr_ref /PATH/TO/CHRSOMELIST
    ```
 ## Input files
 
@@ -26,7 +26,7 @@ Nextflow pipeline that calculates genotype likelihoods in angsd from a list of b
     
 ***name = subsets name***<br>
 ***subset = subsets bamlist location***<br>
-***ancestral = clustering to fit. n +1 -1 will be calculated***<br>
+***ancestral = clustering to fit. n, n+1, n+2, n-1 , n-2 will be calculated***<br>
     
 
 2)  bam.list example: 
@@ -46,7 +46,6 @@ Nextflow pipeline that calculates genotype likelihoods in angsd from a list of b
    chr5<br> 
  
    **Subset of scaffolds present in your bamfiles** 
- 
  
  ## HPC enviroment
  Use of a HPC is recomended. Create a nextflow config profile that matches your cluster set-up [`profile`]( https://www.nextflow.io/docs/latest/config.html#config-profiles)
