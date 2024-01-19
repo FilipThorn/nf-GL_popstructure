@@ -61,7 +61,7 @@ log.info """\
 chromo = file(params.chr).readLines()
 
 //make K interval list
-interval = ['-1', '0', '1']
+interval = ['-2', '-1', '0', '1', '2']
 
 process GenerateGL {
 
@@ -89,19 +89,19 @@ process GenerateGL {
 	-out ${name}_${chr} \
 	-r $chr \
 	-uniqueOnly 1 \
-	-minMapQ 20 \
-	-minQ 20 \
+	-minMapQ params.minMapQ \
+	-minQ params.minQ \
 	-GL 2 \
 	-doGlf 2 \
 	-doMajorMinor 1 \
 	-skipTriallelic 1 \
 	-doMaf 1 \
-	-minMaf 0.05 \
+	-minMaf params.minMaf \
 	-SNP_pval 1e-6 \
 	-doCounts 1 \
 	-minInd \$indLen \
-	-setMinDepthInd 2 \
-	-setMinDepth 20
+	-setMinDepthInd params.setMinDepthInd \
+	-setMinDepth params.setMinDepth
    """
 }
 
@@ -134,8 +134,13 @@ process MergeGL {
 
 // split channel
 
-GL_merge_ch.mix(GL_prune_ch).view().into { GL_pca_ch; GL_admix_ch }
+if (params.prune == false) {
+GL_merge_ch.view().into { GL_pca_ch; GL_admix_ch }
+}
 
+if (params.prune == true ) {
+GL_prune_ch.view().into { GL_pca_ch; GL_admix_ch }
+}
 
 process NGSadmix {
    
@@ -145,12 +150,17 @@ process NGSadmix {
    
    publishDir "${params.outdir}/02.NGSadmix/$name", mode:'copy'
    
+   List permutate = 1..10
+   
    input:
    tuple val(name), file(GL), val(ancestral) from GL_admix_ch
    each number from interval
+   each boot from permutate
+
 
    output:
    file("${name}_k*.qopt")
+   file("*.log")
 
    script:
    """
@@ -158,7 +168,8 @@ process NGSadmix {
    
    k=\$(($number + $ancestral))
 
-   NGSadmix -likes $GL -K \$k -P ${task.cpus} -o ${name}_k\${k}
+   NGSadmix -likes $GL -K \$k -P ${task.cpus} -o ${name}_k\${k}_permutate${boot}
+
    """
 } 
 
