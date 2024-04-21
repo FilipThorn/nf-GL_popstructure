@@ -168,7 +168,7 @@ process NGSadmix {
    
    k=\$(($number + $ancestral))
 
-   NGSadmix -likes $GL -K \$k -P ${task.cpus} -o ${name}_k\${k}_permutate${boot}
+   NGSadmix -likes $GL -K \$k -P ${task.cpus} -seed \$RANDOM -o ${name}_k\${k}_permutate${boot}
 
    """
 } 
