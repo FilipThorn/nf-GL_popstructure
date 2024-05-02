@@ -89,19 +89,19 @@ process GenerateGL {
 	-out ${name}_${chr} \
 	-r $chr \
 	-uniqueOnly 1 \
-	-minMapQ params.minMapQ \
-	-minQ params.minQ \
+	-minMapQ $params.minMapQ \
+	-minQ $params.minQ \
 	-GL 2 \
 	-doGlf 2 \
 	-doMajorMinor 1 \
 	-skipTriallelic 1 \
 	-doMaf 1 \
-	-minMaf params.minMaf \
+	-minMaf $params.minMaf \
 	-SNP_pval 1e-6 \
 	-doCounts 1 \
 	-minInd \$indLen \
-	-setMinDepthInd params.setMinDepthInd \
-	-setMinDepth params.setMinDepth
+	-setMinDepthInd $params.setMinDepthInd \
+	-setMinDepth $params.setMinDepth
    """
 }
 
