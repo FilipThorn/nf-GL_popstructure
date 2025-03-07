@@ -5,18 +5,15 @@ likelihoods in [ANGSD](https://github.com/ANGSD/angsd) from a list of bam files,
 admixture through [NGSadmix](https://github.com/aalbrechtsen/NGSadmix) and
 PCAs through [PCAngsd](https://github.com/Rosemeis/pcangsd).
 
-**Note** The workflow requires a nextflow version that can run
-[dsl1](https://www.nextflow.io/docs/latest/dsl1.html).
+(**TODO**: More description here of the actual workflow (repeated k's, repeated runs, etc).
 
 v2.0 includes pseudo-linkage pruning (by thinning) and a speed-optimization update.
 
-(**TODO**: More description here of the actual workflow (repeated k's, repeated runs, etc).
-
 ## Quick start
 
-(**TODO**: Update install instructions in a file [INSTALL] and in the conda [enviroment.yml](enviroment.yml) files.)
+(**TODO**: Update install instructions in a file [INSTALL](INSTALL) and in the conda [enviroment.yml](enviroment.yml) files.)
 
-1. Install prerequisites. See file [INSTALL](INSTALL).
+1. Install prerequisites (see file [INSTALL](INSTALL)).
 
 2. Download or git clone this repository:
 
@@ -25,7 +22,7 @@ v2.0 includes pseudo-linkage pruning (by thinning) and a speed-optimization upda
 3. Prepare input files ([see below](#input-files))
 
 4. Run the nextflow pipeline (**Note**: needs a nextflow version that can run
-   dsl1. See file[INSTALL](INSTALL)).
+   dsl1.).
 
         $ nextflow run main.nf \
             --bamlist_tsv sample.tsv \
