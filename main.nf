@@ -110,9 +110,7 @@ process GenerateGL {
             -minMapQ $params.minMapQ \
             -r $chr \
             -only_proper_pairs 1 \
-            -remove_bads 1 \
-            -C 50 \
-            -baq 1
+            -remove_bads 1
     """
 }
 
