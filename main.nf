@@ -22,7 +22,7 @@ if (params.help) {
 
             'Mandatory arguments:'
             --bamlist_tsv  FILE    Path to tsv file with three columns: name n path_to_file_with_list_of_bam_files
-            --outdir       FOLDER  Path to output directory where results will be should be stored
+            --outdir       FOLDER  Path to output directory where results will be stored
             --chr          FILE    Path to file containing a list of chromosomes to use
 
             'OPTIONS'
@@ -71,9 +71,11 @@ interval = ['-2', '-1', '0', '1', '2']
 
 process GenerateGL {
 
-    label 'HIGH_RAM'
+    label 'RAM_high'
 
     tag "$name"
+
+    conda '/cfs/klemming/projects/supr/nrmdnalab_storage/src/miniforge3/envs/nf-GL_popstructure'
 
     publishDir "${params.outdir}/01.GL/split/$name", mode:'copy'
 
@@ -119,6 +121,8 @@ process MergeGL {
 
     tag "$name"
 
+    conda '/cfs/klemming/projects/supr/nrmdnalab_storage/src/miniforge3/envs/nf-GL_popstructure'
+
     publishDir "${params.outdir}/01.GL/cat/$name", mode:'copy'
 
     input:
@@ -132,7 +136,7 @@ process MergeGL {
     """
     zcat $beagle | head -n 1 > header.txt
 
-    zcat $beagle | grep -v marker > ${name}_noheader.beagle 
+    zcat $beagle | grep -v marker > ${name}_noheader.beagle
     cat header.txt ${name}_noheader.beagle | gzip -c > ${name}_all.beagle.gz
 
     awk '(NR%${params.pruneDist}==1)' ${name}_noheader.beagle > ${name}_noheader_prune.beagle
@@ -154,6 +158,8 @@ process NGSadmix {
     tag "$name"
 
     label 'EXTRA'
+
+    conda '/cfs/klemming/projects/supr/nrmdnalab_storage/src/miniforge3/envs/nf-GL_popstructure'
 
     publishDir "${params.outdir}/02.NGSadmix/$name", mode:'copy'
 
@@ -185,6 +191,8 @@ process PCANGSD {
 
     label 'EXTRA'
 
+    conda '/cfs/klemming/projects/supr/nrmdnalab_storage/src/miniforge3/envs/nf-GL_popstructure'
+
     publishDir "${params.outdir}/03.PCAngsd/$name", mode:'copy'
 
     input:
@@ -195,7 +203,7 @@ process PCANGSD {
 
     script:
     """
-    pcangsd.py -beagle $GL -o ${name} -threads ${task.cpus}
+    pcangsd -b $GL -o ${name} -t ${task.cpus}
     """
 }
 
