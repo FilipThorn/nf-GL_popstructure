@@ -131,14 +131,15 @@ process MergeGL {
     tuple val(name), file("${name}_all.beagle.gz"), val(ancestral) into GL_merge_ch
     tuple val("${name}_prune"), file("${name}_prune.beagle.gz"), val(ancestral) into GL_prune_ch
 
+    //  #zcat $beagle | head -n 1 > header.txt
+    //  #zcat $beagle | grep -v marker > ${name}_noheader.beagle
+    //  #cat header.txt ${name}_noheader.beagle | gzip -c > ${name}_all.beagle.gz
+    //  #awk '(NR%${params.pruneDist}==1)' ${name}_noheader.beagle > ${name}_noheader_prune.beagle
+    //  #cat header.txt ${name}_noheader_prune.beagle | gzip -c > ${name}_prune.beagle.gz
+
     script:
     """
-    #zcat $beagle | head -n 1 > header.txt
-    #zcat $beagle | grep -v marker > ${name}_noheader.beagle
-    #cat header.txt ${name}_noheader.beagle | gzip -c > ${name}_all.beagle.gz
-    #awk '(NR%${params.pruneDist}==1)' ${name}_noheader.beagle > ${name}_noheader_prune.beagle
-    #cat header.txt ${name}_noheader_prune.beagle | gzip -c > ${name}_prune.beagle.gz
-    echo "Starting MergeGL process for $name and chromosome $chr"
+    echo "Starting MergeGL process for $name"
     echo "Input files: $beagle"
     echo "Ancestral: $ancestral"
 
@@ -162,11 +163,14 @@ process MergeGL {
 }
 
 // Split channel
+log.info "Checking params.prune value: ${params.prune}"
 if (params.prune == false) {
+    log.info "Using GL_merge_ch"
     GL_merge_ch.view().into { GL_pca_ch; GL_admix_ch }
 }
 
 if (params.prune == true ) {
+    log.info "Using GL_prune_ch"
     GL_prune_ch.view().into { GL_pca_ch; GL_admix_ch }
 }
 
