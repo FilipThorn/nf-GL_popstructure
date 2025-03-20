@@ -67,6 +67,8 @@ Channel.fromPath(params.bamlist_tsv)
     .map { row -> tuple(row.name, file(row.subset), row.ancestral ) }
     .set { subset_ch }
 
+subset_ch.view()
+
 // Make chromosome list
 chromo = file(params.chr).readLines()
 
@@ -238,7 +240,7 @@ process PCANGSD {
 workflow {
 
     // Execute GenerateGL process first
-    generateGL_result = GenerateGL(subset_ch)
+    generateGL_result = GenerateGL()
 
     // Ensure MergeGL process is executed
     mergeGL_result = MergeGL(generateGL_result)
