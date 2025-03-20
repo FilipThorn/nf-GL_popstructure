@@ -62,12 +62,9 @@ log.info """\
 
 // Channel
 Channel.fromPath(params.bamlist_tsv)
-    .splitCsv(header:true, sep:'\t')
-    .view()
-    .map { row -> tuple(row.name, file(row.subset), row.ancestral ) }
+    .splitCsv(header: true, sep: '\t')
+    .map { row -> tuple(row.name, file(row.subset), row.ancestral) }
     .set { subset_ch }
-
-subset_ch.view()
 
 // Make chromosome list
 chromo = file(params.chr).readLines()
@@ -77,14 +74,10 @@ interval = ['-2', '-1', '0', '1', '2']
 
 // Run angsd
 process GenerateGL {
-
     tag "$name"
-
     label 'RAM_high'
-
     conda 'environment.yml'
-
-    publishDir "${params.outdir}/01.GL/split/$name", mode:'copy'
+    publishDir "${params.outdir}/01.GL/split/$name", mode: 'copy'
 
     input:
     tuple val(name), file(subset), val(ancestral) from subset_ch
@@ -101,25 +94,69 @@ process GenerateGL {
         -nThreads ${task.cpus} \
         -out ${name}_${chr} \
         -GL 1 \
-            -doGlf 2 \
-            -doMajorMinor 1 \
-            -skipTriallelic 1 \
+        -doGlf 2 \
+        -doMajorMinor 1 \
+        -skipTriallelic 1 \
         -doMaf 1 \
-            -minMaf $params.minMaf \
-            -SNP_pval 1e-6 \
+        -minMaf $params.minMaf \
+        -SNP_pval 1e-6 \
         -doCounts 1 \
-            -setMinDepthInd $params.setMinDepthInd \
-            -setMinDepth $params.setMinDepth \
-            -minInd \$indLen \
-            -minQ $params.minQ \
+        -setMinDepthInd $params.setMinDepthInd \
+        -setMinDepth $params.setMinDepth \
+        -minInd \$indLen \
+        -minQ $params.minQ \
         -bam $subset \
-            -uniqueOnly 1 \
-            -minMapQ $params.minMapQ \
-            -r $chr \
-            -only_proper_pairs 1 \
-            -remove_bads 1
+        -uniqueOnly 1 \
+        -minMapQ $params.minMapQ \
+        -r $chr \
+        -only_proper_pairs 1 \
+        -remove_bads 1
     """
 }
+//process GenerateGL {
+//
+//    tag "$name"
+//
+//    label 'RAM_high'
+//
+//    conda 'environment.yml'
+//
+//    publishDir "${params.outdir}/01.GL/split/$name", mode:'copy'
+//
+//    input:
+//    tuple val(name), file(subset), val(ancestral) from subset_ch
+//    each chr from chromo
+//
+//    output:
+//    tuple val(name), file("${name}_${chr}.beagle.gz"), val(ancestral) into GL_split_ch
+//
+//    script:
+//    """
+//    indLen=\$(wc -l $subset | awk '{print \$1}')
+//
+//    angsd \
+//        -nThreads ${task.cpus} \
+//        -out ${name}_${chr} \
+//        -GL 1 \
+//            -doGlf 2 \
+//            -doMajorMinor 1 \
+//            -skipTriallelic 1 \
+//        -doMaf 1 \
+//            -minMaf $params.minMaf \
+//            -SNP_pval 1e-6 \
+//        -doCounts 1 \
+//            -setMinDepthInd $params.setMinDepthInd \
+//            -setMinDepth $params.setMinDepth \
+//            -minInd \$indLen \
+//            -minQ $params.minQ \
+//        -bam $subset \
+//            -uniqueOnly 1 \
+//            -minMapQ $params.minMapQ \
+//            -r $chr \
+//            -only_proper_pairs 1 \
+//            -remove_bads 1
+//    """
+//}
 
 // Merge GL
 process MergeGL {
@@ -237,12 +274,33 @@ process PCANGSD {
 }
 
 // Workflow definition
+// workflow {
+// 
+//     // Execute GenerateGL process first
+//     generateGL_result = GenerateGL()
+// 
+//     // Ensure MergeGL process is executed
+//     mergeGL_result = MergeGL(generateGL_result)
+// 
+//     // Conditional block to check params.prune
+//     if (params.prune == false) {
+//         log.info "Using GL_merge_ch"
+//         mergeGL_result.GL_merge_ch.view().into { GL_pca_ch; GL_admix_ch }
+//     } else if (params.prune == true) {
+//         log.info "Using GL_prune_ch"
+//         mergeGL_result.GL_prune_ch.view().into { GL_pca_ch; GL_admix_ch }
+//     }
+// 
+//     // Run subsequent processes
+//     NGSadmix(GL_admix_ch)
+//     PCANGSD(GL_pca_ch)
+// }
+
+
 workflow {
 
-    // Execute GenerateGL process first
     generateGL_result = GenerateGL()
 
-    // Ensure MergeGL process is executed
     mergeGL_result = MergeGL(generateGL_result)
 
     // Conditional block to check params.prune
@@ -254,7 +312,7 @@ workflow {
         mergeGL_result.GL_prune_ch.view().into { GL_pca_ch; GL_admix_ch }
     }
 
-    // Run subsequent processes
     NGSadmix(GL_admix_ch)
+
     PCANGSD(GL_pca_ch)
 }
