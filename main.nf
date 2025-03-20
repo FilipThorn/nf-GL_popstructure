@@ -83,11 +83,7 @@ process GenerateGL {
     publishDir "${params.outdir}/01.GL/split/$name", mode: 'copy'
 
     input:
-    // tuple val(name), file(subset), val(ancestral) from subset_ch
-    // each chr from chromo
-    file subset from subset_ch.collect { it[1] }
-    val name from subset_ch.collect { it[0] }
-    val ancestral from subset_ch.collect { it[2] }
+    tuple val(name), file(subset), val(ancestral) from subset_ch
     each chr from chromo
 
     output:
