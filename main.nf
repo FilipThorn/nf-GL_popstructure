@@ -95,7 +95,7 @@ process GenerateGL {
         -out ${name}_${chr} \
         -GL 1 \
             -doGlf 2 \
-        -doMajorMinor 1 \
+            -doMajorMinor 1 \
             -skipTriallelic 1 \
         -doMaf 1 \
             -minMaf $params.minMaf \
