@@ -76,11 +76,14 @@ interval = ['-2', '-1', '0', '1', '2']
 
 
 // // Make chromosome list
-chromo = file(params.chr).readLines()
+//chromo = file(params.chr).readLines()
 // for( line : chromo ) {
 //     println line
 // } // OZ187420.1
+
 process readChromo {
+
+    executor 'local'
 
     input:
     path(chrFile)
@@ -92,13 +95,6 @@ process readChromo {
     """
     chromo=\$(cat $chrFile)
     """
-}
-
-workflow {
-
-    chromo = readChromo(params.chr)
-    chromo.view()
-
 }
 
 // Run angsd
@@ -144,6 +140,14 @@ process GenerateGL {
     """
 }
 
+workflow {
+
+    chromo = readChromo(params.chr)
+    chromo.view()
+    generateGL_result = GenerateGL(subset_ch)
+    generateGL_result.view()
+
+}
 
 
 
