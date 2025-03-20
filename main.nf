@@ -133,13 +133,31 @@ process MergeGL {
 
     script:
     """
+    #zcat $beagle | head -n 1 > header.txt
+    #zcat $beagle | grep -v marker > ${name}_noheader.beagle
+    #cat header.txt ${name}_noheader.beagle | gzip -c > ${name}_all.beagle.gz
+    #awk '(NR%${params.pruneDist}==1)' ${name}_noheader.beagle > ${name}_noheader_prune.beagle
+    #cat header.txt ${name}_noheader_prune.beagle | gzip -c > ${name}_prune.beagle.gz
+    echo "Starting MergeGL process for $name and chromosome $chr"
+    echo "Input files: $beagle"
+    echo "Ancestral: $ancestral"
+
     zcat $beagle | head -n 1 > header.txt
+    echo "Header extraction completed."
 
     zcat $beagle | grep -v marker > ${name}_noheader.beagle
+    echo "Removed markers from beagle files."
+
     cat header.txt ${name}_noheader.beagle | gzip -c > ${name}_all.beagle.gz
+    echo "Combined header and no-header beagle file created: ${name}_all.beagle.gz"
 
     awk '(NR%${params.pruneDist}==1)' ${name}_noheader.beagle > ${name}_noheader_prune.beagle
+    echo "Pruned beagle file created: ${name}_noheader_prune.beagle"
+
     cat header.txt ${name}_noheader_prune.beagle | gzip -c > ${name}_prune.beagle.gz
+    echo "Final pruned beagle file created: ${name}_prune.beagle.gz"
+
+    echo "MergeGL process completed for $name"
     """
 }
 
