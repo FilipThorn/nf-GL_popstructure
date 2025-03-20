@@ -1,6 +1,6 @@
 #!/usr/bin/env nextflow
 
-nextflow.enable.dsl=2
+//nextflow.enable.dsl=2
 
 // Help
 if (params.help) {
