@@ -67,11 +67,14 @@ Channel.fromPath(params.bamlist_tsv)
     .set { subset_ch }
 
 // debug
-subset_ch.view()
+// subset_ch.view()
+// [mt_k1to5, /cfs/klemming/projects/supr/nrmdnalab_storage/projects/patric-f-natrix/analyses/nf-GL_popstructure/input/bam_mt_no_outgrp.list, 3]
+// [mt_k6to10, /cfs/klemming/projects/supr/nrmdnalab_storage/projects/patric-f-natrix/analyses/nf-GL_popstructure/input/bam_mt_no_outgrp.list, 8]
 
 // // Make chromosome list
-// chromo = file(params.chr).readLines()
-// 
+chromo = file(params.chr).readLines()
+chromo.view()
+
 // // Make K interval list
 // interval = ['-2', '-1', '0', '1', '2']
 // 
