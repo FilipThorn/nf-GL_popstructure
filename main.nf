@@ -60,18 +60,18 @@ log.info """\
          """
          .stripIndent()
 
-// Channel
-Channel.fromPath(params.bamlist_tsv)
-    .splitCsv(header:true, sep:'\t')
-    .view()
-    .map { row -> tuple(row.name, file(row.subset), row.ancestral ) }
-    .set { subset_ch }
-
-// Make chromosome list
-chromo = file(params.chr).readLines()
-
-// Make K interval list
-interval = ['-2', '-1', '0', '1', '2']
+// // Channel
+// Channel.fromPath(params.bamlist_tsv)
+//     .splitCsv(header:true, sep:'\t')
+//     .view()
+//     .map { row -> tuple(row.name, file(row.subset), row.ancestral ) }
+//     .set { subset_ch }
+// 
+// // Make chromosome list
+// chromo = file(params.chr).readLines()
+// 
+// // Make K interval list
+// interval = ['-2', '-1', '0', '1', '2']
 
 // Run angsd
 process GenerateGL {
@@ -237,8 +237,21 @@ process PCANGSD {
 // Workflow definition
 workflow {
 
+    // Channel
+    Channel.fromPath(params.bamlist_tsv)
+        .splitCsv(header:true, sep:'\t')
+        .view()
+        .map { row -> tuple(row.name, file(row.subset), row.ancestral ) }
+        .set { subset_ch }
+
+    // Make chromosome list
+    chromo = file(params.chr).readLines()
+
+    // Make K interval list
+    interval = ['-2', '-1', '0', '1', '2']
+
     // Execute GenerateGL process first
-    generateGL_result = GenerateGL()
+    generateGL_result = GenerateGL(subset_ch)
 
     // Ensure MergeGL process is executed
     mergeGL_result = MergeGL(generateGL_result)
