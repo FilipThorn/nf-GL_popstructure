@@ -127,13 +127,14 @@ The example below assumes mandatory arguments are provided in the
 [`nextflow.config`](nextflow.config) file.
 
     $ screen -S glpop
-    $ ml PDC/23.12 bioinfo-tools Nextflow/22.10.1
+    $ ml PDC/23.12 nextflow
+    #$ export NXF_CONDA_CACHEDIR=/cfs/klemming/projects/supr/nrmdnalab_storage/src/miniforge3/envs/nf-GL_popstructure
     $ export NXF_OPTS='-Xms1g -Xmx4g'
-    $ export NXF_HOME=/cfs/klemming/projects/supr/nrmdnalab_storage/src/NFX_HOME
     $ nextflow run \
         -w $SNIC_TMP/nf-GL_popstructure/work \
         main.nf \
         -name GL_popstructure \
+        -with-conda \
         -with-report GL_popstructure.html \
         -profile dardel \
         --project 'naiss2024-22-1518'
