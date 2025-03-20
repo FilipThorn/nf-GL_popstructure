@@ -70,55 +70,83 @@ Channel.fromPath(params.bamlist_tsv)
 // [mt_k1to5, /cfs/klemming/projects/supr/nrmdnalab_storage/projects/patric-f-natrix/analyses/nf-GL_popstructure/input/bam_mt_no_outgrp.list, 3]
 // [mt_k6to10, /cfs/klemming/projects/supr/nrmdnalab_storage/projects/patric-f-natrix/analyses/nf-GL_popstructure/input/bam_mt_no_outgrp.list, 8]
 
-// // Make chromosome list
-chromo = file(params.chr).readLines()
-for( line : chromo ) {
-    println line
-}
 
 // Make K interval list
 interval = ['-2', '-1', '0', '1', '2']
 
-// // Run angsd
-// process GenerateGL {
-//     tag "$name"
-//     label 'RAM_high'
-//     conda 'environment.yml'
-//     publishDir "${params.outdir}/01.GL/split/$name", mode: 'copy'
-// 
-//     input:
-//     tuple val(name), file(subset), val(ancestral) from subset_ch
-//     each chr from chromo
-// 
-//     output:
-//     tuple val(name), file("${name}_${chr}.beagle.gz"), val(ancestral) into GL_split_ch
-// 
-//     script:
-//     """
-//     indLen=\$(wc -l $subset | awk '{print \$1}')
-//     angsd \
-//         -nThreads ${task.cpus} \
-//         -out ${name}_${chr} \
-//         -GL 1 \
-//         -doGlf 2 \
-//         -doMajorMinor 1 \
-//         -skipTriallelic 1 \
-//         -doMaf 1 \
-//         -minMaf $params.minMaf \
-//         -SNP_pval 1e-6 \
-//         -doCounts 1 \
-//         -setMinDepthInd $params.setMinDepthInd \
-//         -setMinDepth $params.setMinDepth \
-//         -minInd \$indLen \
-//         -minQ $params.minQ \
-//         -bam $subset \
-//         -uniqueOnly 1 \
-//         -minMapQ $params.minMapQ \
-//         -r $chr \
-//         -only_proper_pairs 1 \
-//         -remove_bads 1
-//     """
-// }
+
+// // Make chromosome list
+chromo = file(params.chr).readLines()
+// for( line : chromo ) {
+//     println line
+// } // OZ187420.1
+process readChromo {
+
+    input:
+    path(chrFile)
+
+    output:
+    val chromo
+
+    script:
+    """
+    chromo=\$(cat $chrFile)
+    """
+}
+
+workflow {
+
+    chromo = readChromo(params.chr)
+    chromo.view()
+
+}
+
+// Run angsd
+process GenerateGL {
+    tag "$name"
+    label 'RAM_high'
+    conda 'environment.yml'
+    publishDir "${params.outdir}/01.GL/split/$name", mode: 'copy'
+
+    input:
+    //tuple val(name), file(subset), val(ancestral) from subset_ch
+    tuple val(name), path(subset), val(ancestral)
+    each chr from chromo
+
+    output:
+    //tuple val(name), file("${name}_${chr}.beagle.gz"), val(ancestral) into GL_split_ch
+    tuple val(name), path("${name}_${chr}.beagle.gz"), val(ancestral)
+
+    script:
+    """
+    indLen=\$(wc -l $subset | awk '{print \$1}')
+    angsd \
+        -nThreads ${task.cpus} \
+        -out ${name}_${chr} \
+        -GL 1 \
+        -doGlf 2 \
+        -doMajorMinor 1 \
+        -skipTriallelic 1 \
+        -doMaf 1 \
+        -minMaf $params.minMaf \
+        -SNP_pval 1e-6 \
+        -doCounts 1 \
+        -setMinDepthInd $params.setMinDepthInd \
+        -setMinDepth $params.setMinDepth \
+        -minInd \$indLen \
+        -minQ $params.minQ \
+        -bam $subset \
+        -uniqueOnly 1 \
+        -minMapQ $params.minMapQ \
+        -r $chr \
+        -only_proper_pairs 1 \
+        -remove_bads 1
+    """
+}
+
+
+
+
 // 
 // // Merge GL
 // process MergeGL {
