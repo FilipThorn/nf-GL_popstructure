@@ -1,48 +1,50 @@
 #!/usr/bin/env nextflow
 
+nextflow.enable.dsl=2
+
 if (params.help) {
     log.info """\
-            __________________
-            |                |
-            | |```````| |`````
-            | |____   | |
-            |     |   | |
-            | |````   | |
-            | |ilip   | |hörn
-            –––––––––––––––––––––––––––––––––––––––
-            GenotypeLikelihood Population Structure
-            NEXTFLOW   P I P E L I N E
-            Dardel version (JN)
-            –––––––––––––––––––––––––––––––––––––––
-            'USAGE'
-            1. Add project ID in profile/dardel.config
-            2. Make sure params are set to your liking in nextflow.config
-            3. Run
-            NXF_VER=22.10.1 nextflow run main.nf -profile dardel -with-report --bamlist_tsv bams.tsv --chr chr.list --outdir outfolder
+             __________________
+             |                |
+             | |```````| |`````
+             | |____   | |
+             |     |   | |
+             | |````   | |
+             | |ilip   | |hörn
+             –––––––––––––––––––––––––––––––––––––––
+             GenotypeLikelihood Population Structure
+             NEXTFLOW   P I P E L I N E
+             Dardel version (JN)
+             –––––––––––––––––––––––––––––––––––––––
+             'USAGE'
+             1. Add project ID in profile/dardel.config
+             2. Make sure params are set to your liking in nextflow.config
+             3. Run
+                nextflow run main.nf --bamlist_tsv bams.tsv --chr chr.list --outdir outfolder
 
-            'Mandatory arguments:'
-            --bamlist_tsv  FILE    Path to tsv file with three columns: name n path_to_file_with_list_of_bam_files
-            --outdir       FOLDER  Path to output directory where results will be stored
-            --chr          FILE    Path to file containing a list of chromosomes to use
+             'Mandatory arguments:'
+             --bamlist_tsv FILE   Path to tsv file with three columns:
+                                  name n path_to_file_with_list_of_bam_files
+             --chr         FILE   Path to file containing a list of chromosomes to use
+             --outdir      FOLDER Path to output directory where results will be stored
 
-            'OPTIONS'
-            --help                 Outputs this help log
-            -resume                Nextflow cmd to resume modified workflow
+             'OPTIONS'
+             --help               Outputs this help log
+             -resume              Nextflow cmd to resume modified workflow
 
-            'HPC'
-            -profile       FILE    If the intention is to run the workflow on HPC, please
-                                   provide a suitable profile in the nextflow.config file
-                                   and in the profile folder
+             'HPC'
+             -profile      FILE   If the intention is to run the workflow on HPC, please
+                                  provide a suitable profile in the nextflow.config file
+                                  and in the profile folder
 
-            'SUPPORT'
-            Email Filip.Thorn@NRM.se for questions on script
-            Consult http://www.popgen.dk/software/index.php/ANGSD for ANGSD
-            Consult http://www.popgen.dk/software/index.php/NgsAdmix for NGSadmix
-            Consult http://www.popgen.dk/software/index.php/PCAngsd for PCangsd
-            """
+             'SUPPORT'
+             Email Filip.Thorn@NRM.se for questions on script
+             Consult http://www.popgen.dk/software/index.php/ANGSD for ANGSD
+             Consult http://www.popgen.dk/software/index.php/NgsAdmix for NGSadmix
+             Consult http://www.popgen.dk/software/index.php/PCAngsd for PCangsd
+             """
     exit 1
 }
-
 
 log.info """\
          –––––––––––––––––––––––––––––––––––––––
@@ -55,18 +57,17 @@ log.info """\
          """
          .stripIndent()
 
-
 // Channel
-channel.fromPath(params.bamlist_tsv)
+Channel
+    .fromPath(params.bamlist_tsv)
     .splitCsv(header:true, sep:'\t')
-    .view()
     .map { row -> tuple(row.name, file(row.subset), row.ancestral ) }
     .set { subset_ch }
 
-// make chromosome list
+// Make chromosome list
 chromo = file(params.chr).readLines()
 
-//make K interval list
+// Make K interval list
 interval = ['-2', '-1', '0', '1', '2']
 
 process GenerateGL {
@@ -114,7 +115,6 @@ process GenerateGL {
     """
 }
 
-
 process MergeGL {
 
     tag "$name"
@@ -142,7 +142,7 @@ process MergeGL {
     """
 }
 
-// split channel
+// Split channel
 if (params.prune == false) {
     GL_merge_ch.view().into { GL_pca_ch; GL_admix_ch }
 }
@@ -197,7 +197,7 @@ process PCANGSD {
     tuple val(name), file(GL), val(ancestral) from GL_pca_ch
 
     output:
-    file("${name}.cov") 
+    file("${name}.cov")
 
     script:
     """
