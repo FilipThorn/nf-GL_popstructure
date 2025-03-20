@@ -89,7 +89,6 @@ process GenerateGL {
     script:
     """
     indLen=\$(wc -l $subset | awk '{print \$1}')
-
     angsd \
         -nThreads ${task.cpus} \
         -out ${name}_${chr} \
@@ -113,50 +112,6 @@ process GenerateGL {
         -remove_bads 1
     """
 }
-//process GenerateGL {
-//
-//    tag "$name"
-//
-//    label 'RAM_high'
-//
-//    conda 'environment.yml'
-//
-//    publishDir "${params.outdir}/01.GL/split/$name", mode:'copy'
-//
-//    input:
-//    tuple val(name), file(subset), val(ancestral) from subset_ch
-//    each chr from chromo
-//
-//    output:
-//    tuple val(name), file("${name}_${chr}.beagle.gz"), val(ancestral) into GL_split_ch
-//
-//    script:
-//    """
-//    indLen=\$(wc -l $subset | awk '{print \$1}')
-//
-//    angsd \
-//        -nThreads ${task.cpus} \
-//        -out ${name}_${chr} \
-//        -GL 1 \
-//            -doGlf 2 \
-//            -doMajorMinor 1 \
-//            -skipTriallelic 1 \
-//        -doMaf 1 \
-//            -minMaf $params.minMaf \
-//            -SNP_pval 1e-6 \
-//        -doCounts 1 \
-//            -setMinDepthInd $params.setMinDepthInd \
-//            -setMinDepth $params.setMinDepth \
-//            -minInd \$indLen \
-//            -minQ $params.minQ \
-//        -bam $subset \
-//            -uniqueOnly 1 \
-//            -minMapQ $params.minMapQ \
-//            -r $chr \
-//            -only_proper_pairs 1 \
-//            -remove_bads 1
-//    """
-//}
 
 // Merge GL
 process MergeGL {
@@ -182,40 +137,13 @@ process MergeGL {
 
     script:
     """
-    echo "Starting MergeGL process for $name"
-    echo "Input files: $beagle"
-    echo "Ancestral: $ancestral"
-
     zcat $beagle | head -n 1 > header.txt
-    echo "Header extraction completed."
-
     zcat $beagle | grep -v marker > ${name}_noheader.beagle
-    echo "Removed markers from beagle files."
-
     cat header.txt ${name}_noheader.beagle | gzip -c > ${name}_all.beagle.gz
-    echo "Combined header and no-header beagle file created: ${name}_all.beagle.gz"
-
     awk '(NR%${params.pruneDist}==1)' ${name}_noheader.beagle > ${name}_noheader_prune.beagle
-    echo "Pruned beagle file created: ${name}_noheader_prune.beagle"
-
     cat header.txt ${name}_noheader_prune.beagle | gzip -c > ${name}_prune.beagle.gz
-    echo "Final pruned beagle file created: ${name}_prune.beagle.gz"
-
-    echo "MergeGL process completed for $name"
     """
 }
-
-// Split channel
-//log.info "Checking params.prune value: ${params.prune}"
-//if (params.prune == false) {
-//    log.info "Using GL_merge_ch"
-//    GL_merge_ch.view().into { GL_pca_ch; GL_admix_ch }
-//}
-//
-//if (params.prune == true ) {
-//    log.info "Using GL_prune_ch"
-//    GL_prune_ch.view().into { GL_pca_ch; GL_admix_ch }
-//}
 
 // Run NGSadmix
 process NGSadmix {
@@ -242,11 +170,8 @@ process NGSadmix {
     script:
     """
     echo $number
-
     k=\$(($number + $ancestral))
-
     NGSadmix -likes $GL -K \$k -P ${task.cpus} -seed \$RANDOM -o ${name}_k\${k}_permutate${boot}
-
     """
 }
 
@@ -272,30 +197,6 @@ process PCANGSD {
     pcangsd -b $GL -o ${name} -t ${task.cpus}
     """
 }
-
-// Workflow definition
-// workflow {
-// 
-//     // Execute GenerateGL process first
-//     generateGL_result = GenerateGL()
-// 
-//     // Ensure MergeGL process is executed
-//     mergeGL_result = MergeGL(generateGL_result)
-// 
-//     // Conditional block to check params.prune
-//     if (params.prune == false) {
-//         log.info "Using GL_merge_ch"
-//         mergeGL_result.GL_merge_ch.view().into { GL_pca_ch; GL_admix_ch }
-//     } else if (params.prune == true) {
-//         log.info "Using GL_prune_ch"
-//         mergeGL_result.GL_prune_ch.view().into { GL_pca_ch; GL_admix_ch }
-//     }
-// 
-//     // Run subsequent processes
-//     NGSadmix(GL_admix_ch)
-//     PCANGSD(GL_pca_ch)
-// }
-
 
 workflow {
 
