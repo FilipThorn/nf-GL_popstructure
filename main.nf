@@ -62,6 +62,7 @@ log.info """\
 // Channel
 channel.fromPath(params.bamlist_tsv)
     .splitCsv(header:true, sep:'\t')
+    .view()
     .map { row -> tuple(row.name, file(row.subset), row.ancestral) }
     .set { subset_ch }
 
@@ -141,7 +142,9 @@ process MergeGL {
 // Split channel
 if (params.prune == false) {
     GL_merge_ch.view().into { GL_pca_ch; GL_admix_ch }
-} elsif (params.prune == true ) {
+}
+
+if (params.prune == true ) {
     GL_prune_ch.view().into { GL_pca_ch; GL_admix_ch }
 }
 
