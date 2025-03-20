@@ -1,6 +1,6 @@
 #!/usr/bin/env nextflow
 
-//nextflow.enable.dsl=2
+nextflow.enable.dsl=2
 
 // Help
 if (params.help) {
@@ -66,18 +66,19 @@ Channel.fromPath(params.bamlist_tsv)
     .map { row -> tuple(row.name, file(row.subset), row.ancestral) }
     .set { subset_ch }
 
-// debug
 // subset_ch.view()
 // [mt_k1to5, /cfs/klemming/projects/supr/nrmdnalab_storage/projects/patric-f-natrix/analyses/nf-GL_popstructure/input/bam_mt_no_outgrp.list, 3]
 // [mt_k6to10, /cfs/klemming/projects/supr/nrmdnalab_storage/projects/patric-f-natrix/analyses/nf-GL_popstructure/input/bam_mt_no_outgrp.list, 8]
 
 // // Make chromosome list
 chromo = file(params.chr).readLines()
-chromo.view()
+for( line : chromo ) {
+    println line
+}
 
-// // Make K interval list
-// interval = ['-2', '-1', '0', '1', '2']
-// 
+// Make K interval list
+interval = ['-2', '-1', '0', '1', '2']
+
 // // Run angsd
 // process GenerateGL {
 //     tag "$name"
