@@ -167,16 +167,16 @@ process MergeGL {
 }
 
 // Split channel
-log.info "Checking params.prune value: ${params.prune}"
-if (params.prune == false) {
-    log.info "Using GL_merge_ch"
-    GL_merge_ch.view().into { GL_pca_ch; GL_admix_ch }
-}
-
-if (params.prune == true ) {
-    log.info "Using GL_prune_ch"
-    GL_prune_ch.view().into { GL_pca_ch; GL_admix_ch }
-}
+//log.info "Checking params.prune value: ${params.prune}"
+//if (params.prune == false) {
+//    log.info "Using GL_merge_ch"
+//    GL_merge_ch.view().into { GL_pca_ch; GL_admix_ch }
+//}
+//
+//if (params.prune == true ) {
+//    log.info "Using GL_prune_ch"
+//    GL_prune_ch.view().into { GL_pca_ch; GL_admix_ch }
+//}
 
 // Run NGSadmix
 process NGSadmix {
@@ -234,3 +234,25 @@ process PCANGSD {
     """
 }
 
+// Workflow definition
+workflow {
+
+    // Execute GenerateGL process first
+    generateGL_result = GenerateGL()
+
+    // Ensure MergeGL process is executed
+    mergeGL_result = MergeGL(generateGL_result)
+
+    // Conditional block to check params.prune
+    if (params.prune == false) {
+        log.info "Using GL_merge_ch"
+        mergeGL_result.GL_merge_ch.view().into { GL_pca_ch; GL_admix_ch }
+    } else if (params.prune == true) {
+        log.info "Using GL_prune_ch"
+        mergeGL_result.GL_prune_ch.view().into { GL_pca_ch; GL_admix_ch }
+    }
+
+    // Run subsequent processes
+    NGSadmix(GL_admix_ch)
+    PCANGSD(GL_pca_ch)
+}
