@@ -5,13 +5,13 @@ likelihoods in [ANGSD](https://github.com/ANGSD/angsd) from a list of bam files,
 admixture through [NGSadmix](https://github.com/aalbrechtsen/NGSadmix) and
 PCAs through [PCAngsd](https://github.com/Rosemeis/pcangsd).
 
-(**TODO**: More description here of the actual workflow (repeated k's, repeated runs, etc).
-
 v2.0 includes pseudo-linkage pruning (by thinning) and a speed-optimization update.
+
+(**TODO**: More description here of the actual workflow (repeated k's, repeated runs, etc).
 
 ## Quick start
 
-(**TODO**: Update install instructions in a file [INSTALL](INSTALL) and in the conda [enviroment.yml](enviroment.yml) files.)
+(**TODO**: Update install instructions in file [INSTALL](INSTALL))
 
 1. Install prerequisites (see file [INSTALL](INSTALL)).
 
@@ -58,6 +58,46 @@ v2.0 includes pseudo-linkage pruning (by thinning) and a speed-optimization upda
 
 ## Output files
 
+Example:
+
+        output
+        ├── 01.GL
+        │   ├── cat
+        │   │   ├── mt_k1to5
+        │   │   │   ├── mt_k1to5_all.beagle.gz
+        │   │   │   └── mt_k1to5_prune.beagle.gz
+        │   │   └── mt_k6to10
+        │   │       ├── mt_k6to10_all.beagle.gz
+        │   │       └── mt_k6to10_prune.beagle.gz
+        │   └── split
+        │       ├── mt_k1to5
+        │       │   └── mt_k1to5_OZ187420.1.beagle.gz
+        │       └── mt_k6to10
+        │           └── mt_k6to10_OZ187420.1.beagle.gz
+        ├── 02.NGSadmix
+        │   ├── mt_k1to5_prune
+        │   │   ├── mt_k1to5_prune_k1_permutate1.log
+        │   │   ├── mt_k1to5_prune_k1_permutate1.qopt
+        │   │   ├── mt_k1to5_prune_k1_permutate2.log
+        │   │   ├── mt_k1to5_prune_k1_permutate2.qopt
+        ...
+        │   │   ├── mt_k1to5_prune_k9_permutate10.log
+        │   │   └── mt_k1to5_prune_k9_permutate10.qopt
+        ...
+        │   └── mt_k6to10_prune
+        │       ├── mt_k6to10_prune_k10_permutate1.log
+        │       ├── mt_k6to10_prune_k10_permutate1.qopt
+        │       ├── mt_k6to10_prune_k10_permutate2.log
+        │       ├── mt_k6to10_prune_k10_permutate2.qopt
+        ...
+        │       ├── mt_k6to10_prune_k9_permutate10.log
+        │       └── mt_k6to10_prune_k9_permutate10.qopt
+        └── 03.PCAngsd
+            ├── mt_k1to5_prune
+            │   └── mt_k1to5_prune.cov
+            └── mt_k6to10_prune
+                └── mt_k6to10_prune.cov
+
 (**TODO**: describe the output files)
 
 ## Plotting the output
@@ -70,22 +110,31 @@ For plotting the output, we highly recommend pong
 ## HPC environment
 
 Use of a HPC is highly recommended. Create a nextflow config profile that
-matches your cluster set-up [`profile`](https://www.nextflow.io/docs/latest/config.html#config-profiles)
-and add it in the folder `profile/` and to the [`nextflow.config`](nextflow.config).
+matches your cluster set-up
+[`profile`](https://www.nextflow.io/docs/latest/config.html#config-profiles)
+and add it in the folder `profile/` and to the
+[`nextflow.config`](nextflow.config).
 
 ### Example running on [Dardel](https://www.pdc.kth.se/hpc-services/computing-systems/dardel-hpc-system)
 
 (**TODO**: finish these instructions)
 
-    $ ml PDC/23.12 java/17.0.4 singularity python/3.12.3 bioinfo-tools NextFlow/22.10.1
+Current version (20 Mar 2025) uses hard coded paths in `main.nf` to the conda
+environment on dardel.  Hence, the conda environment needs to be build before
+execution, and paths adjusted.
+
+The example below assumes mandatory arguments are provided in the
+[`nextflow.config`](nextflow.config) file.
+
+    $ screen -S glpop
+    $ ml PDC/23.12 bioinfo-tools Nextflow/22.10.1
     $ export NXF_OPTS='-Xms1g -Xmx4g'
-    $ export NXF_CONDA_CACHEDIR=/cfs/klemming/projects/supr/path/to/NXF_CONDA_CACHEDIR
-    $ export NXF_SINGULARITY_CACHEDIR=/cfs/klemming/projects/supr/path/to/NXF_SINGULARITY_CACHEDIR
-    $ mkdir -p $SNIC_TMP/nf-GL_popstructure/work
+    $ export NXF_HOME=/cfs/klemming/projects/supr/nrmdnalab_storage/src/NFX_HOME
     $ nextflow run \
         -w $SNIC_TMP/nf-GL_popstructure/work \
-        ./main.nf \
+        main.nf \
         -name GL_popstructure \
         -with-report GL_popstructure.html \
         -profile dardel \
-        --project projid
+        --project 'naiss2024-22-1518'
+
