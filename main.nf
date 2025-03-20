@@ -62,7 +62,6 @@ log.info """\
 // Channel
 channel.fromPath(params.bamlist_tsv)
     .splitCsv(header:true, sep:'\t')
-    .view()
     .map { row -> tuple(row.name, file(row.subset), row.ancestral) }
     .set { subset_ch }
 
