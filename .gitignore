@@ -3,6 +3,6 @@ private/*
 input/
 output/
 *.html
-.nextflow.log
+.nextflow.log*
 .nextflow/
 work/
