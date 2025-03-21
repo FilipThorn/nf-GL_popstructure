@@ -76,6 +76,7 @@ process GenerateGL {
 
     tag "$name"
     label 'RAM_high'
+    //conda 'angsd'
     conda 'environment.yml'
     //conda '/cfs/klemming/projects/supr/nrmdnalab_storage/src/miniforge3/envs/nf-GL_popstructure'
 
@@ -118,8 +119,6 @@ process GenerateGL {
 process MergeGL {
 
     tag "$name"
-    conda 'environment.yml'
-    //conda '/cfs/klemming/projects/supr/nrmdnalab_storage/src/miniforge3/envs/nf-GL_popstructure'
 
     publishDir "${params.outdir}/01.GL/cat/$name", mode:'copy'
 
@@ -153,6 +152,7 @@ process NGSadmix {
 
     tag "$name"
     label 'EXTRA'
+    //conda 'NGSadmix'
     conda 'environment.yml'
     //conda '/cfs/klemming/projects/supr/nrmdnalab_storage/src/miniforge3/envs/nf-GL_popstructure'
 
@@ -181,6 +181,7 @@ process PCANGSD {
 
     tag "$name"
     label 'EXTRA'
+    //conda 'pcangsd'
     conda 'environment.yml'
     //conda '/cfs/klemming/projects/supr/nrmdnalab_storage/src/miniforge3/envs/nf-GL_popstructure'
 
