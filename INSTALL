@@ -1,0 +1,38 @@
+# Install instructions for nf-GL_popstructure
+
+## Download or `git clone` the [nf-GL_popstructure repository](https://github.com/FilipThorn/nf-GL_popstructure)
+
+    $ git clone https://github.com/FilipThorn/nf-GL_popstructure.git
+
+## Prerequisites
+
+1. [**Nextflow**](https://www.nextflow.io/docs/latest/install.html). Note, nextflow
+  also requires java (see [install
+  instructions](https://www.nextflow.io/docs/latest/install.html#requirements)).
+  **Note** The workflow requires a nextflow version that can run
+  [dsl1](https://www.nextflow.io/docs/latest/dsl1.html), which would be 22.12 <
+  version >= 19.04. This can be achieved by setting the `NXF_VER` variable before
+  starting nextflow. Nextflow will then download the necessary version before
+  execution of the workflow. See example in the [README file](README.md).
+
+2. [**Python 3** (and pip for local installation)](https://www.python.org/)
+
+3. **Conda** (e.g. [miniconda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html))
+
+## Installation of required packages
+
+A virtual (conda-)environment with the neccessary packages can be created using mamba:
+
+    $ mamba env create -f environment.yml
+
+Alternatively (assuming mamba is installed), call nextflow with the
+`-with-conda` option. An environment will be created first time the workflow is
+run.
+
+For a local installation of angsd, pcangsd, and NGSadmix, see links below.
+These installations will require compilers and make etc.
+
+- [**ANGSD**](https://www.popgen.dk/angsd/index.php/Installation)
+- [**PCAngsd**](https://www.popgen.dk/software/index.php/PCAngsd#Download_and_Installation)
+- [**NGSadmix**](https://www.popgen.dk/software/index.php/NgsAdmix#Download_and_Installation)
+

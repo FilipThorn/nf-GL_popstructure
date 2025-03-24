@@ -1,0 +1,13 @@
+name: nf-GL_popstructure
+channels:
+ - conda-forge
+ - bioconda
+ - default
+dependencies:
+ - angsd=0.940
+ - python>3.10
+ - numpy>2.0.0
+ - scipy>1.14.0
+ - pip
+ - pip:
+    - pcangsd

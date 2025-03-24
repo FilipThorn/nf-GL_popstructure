@@ -1,0 +1,8 @@
+private/*
+*.swp
+input/
+output/
+*.html
+.nextflow.log*
+.nextflow/
+work/
